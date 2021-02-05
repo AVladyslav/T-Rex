@@ -1,15 +1,21 @@
 class Settings:
 
+    # Frames per seconds
+    FPS = 30
+
     # Sizes
-    logo_position = (300, 30)
+    logo_position = (300, 30)   # x, y
     screen_size = [900, 300]
+
+    # Positions
+    t_rex_position = {'x': 50, 'y': 280}
 
     # Colors
     bg_color = (243, 243, 243)
 
     # Speeds
     cloud_speed = -5
-    ground_speed = -40
+    ground_speed = -20
     t_rex_speed = 10
 
     # Scale factors
@@ -42,5 +48,3 @@ class Settings:
     t_rex_ducking_n_of_sprites = 2
     t_rex_n_of_sprites = 6
     pterosaur_n_of_sprites = 2
-
-    pass

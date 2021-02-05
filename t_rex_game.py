@@ -10,6 +10,7 @@ class TRexGame:
 
     def __init__(self):
         pg.init()
+
         self.settings = Settings()
         self.clock = pg.time.Clock()
         self.running = True
@@ -23,31 +24,31 @@ class TRexGame:
         self.t_rex = TRex(speed=self.settings.t_rex_speed, scale_factor=self.settings.t_rex_scale)
         self.ground = Ground(speed=self.settings.ground_speed)
 
-        pass
-
     def _check_events(self):
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.running = False
-        pass
+
+    def _update(self):
+        self.ground.update()
+        self.t_rex.update()
 
     def _update_screen(self):
         self.screen.fill(self.settings.bg_color)
+        self.ground.draw(self.screen)
+        self.t_rex.draw(self.screen)
         self.screen.blit(self.logo_image, self.settings.logo_position)
         # Updating display
         pg.display.update()
-        pass
 
     def run_game(self):
 
         # Run until the user asks to quit
         while self.running:
             self._check_events()
+            self._update()
             self._update_screen()
-            self.clock.tick(1)
+            self.clock.tick(self.settings.FPS)
 
         # Done! Time to quit.
         pg.quit()
-        pass
-
-    pass

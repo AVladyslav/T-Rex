@@ -1,6 +1,9 @@
 import os
 import pygame as pg
-from settings import Settings
+
+from model.ground import Ground
+from model.t_rex import TRex
+from utils.settings import Settings
 
 
 class TRexGame:
@@ -16,6 +19,10 @@ class TRexGame:
         pg.display.set_caption('Run T-Rex Run')
 
         self.logo_image = pg.image.load(os.path.join('images', 'logo.png'))
+
+        self.t_rex = TRex(speed=self.settings.t_rex_speed, scale_factor=self.settings.t_rex_scale)
+        self.ground = Ground(speed=self.settings.ground_speed)
+
         pass
 
     def _check_events(self):

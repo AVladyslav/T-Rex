@@ -8,7 +8,7 @@ class Settings:
     screen_size = [900, 300]
 
     # Positions
-    t_rex_position = {'x': 50, 'y': 280}
+    dino_position = {'x': 50, 'y': 280}
 
     # Colors
     bg_color = (243, 243, 243)
@@ -16,7 +16,7 @@ class Settings:
     # Speeds
     cloud_speed = -5
     ground_speed = -20
-    t_rex_speed = 10
+    dino_speed = 10
 
     # Scale factors
     cactus_scale = 0
@@ -24,7 +24,7 @@ class Settings:
     pterosaur_scale = 0
     logo_scale = 0
     score_scale = 0
-    t_rex_scale = 0
+    dino_scale = 0
 
     # Path to images
     images_path = 'images'
@@ -40,11 +40,11 @@ class Settings:
     cactus_small_sheet_name = 'cactus-small.png'
     pterosaur_sheet_name = 'pterosaur.png'
     score_sheet_name = 'score.png'
-    t_rex_sheet_name = 't-rex.png'
-    t_rex_ducking_sheet_name = 't-rex-ducking.png'
+    dino_sheet_name = 'dino.png'
+    dino_ducking_sheet_name = 'dino-ducking.png'
 
     # Sprite sheets number of sheets
     cactus_small_n_of_sprites = 3
-    t_rex_ducking_n_of_sprites = 2
-    t_rex_n_of_sprites = 6
+    dino_ducking_n_of_sprites = 2
+    dino_n_of_sprites = 6
     pterosaur_n_of_sprites = 2

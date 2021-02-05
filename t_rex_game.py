@@ -2,7 +2,7 @@ import os
 import pygame as pg
 
 from model.ground import Ground
-from model.t_rex import TRex
+from model.dino import Dino
 from utils.settings import Settings
 
 
@@ -21,7 +21,7 @@ class TRexGame:
 
         self.logo_image = pg.image.load(os.path.join('images', 'logo.png'))
 
-        self.t_rex = TRex(speed=self.settings.t_rex_speed, scale_factor=self.settings.t_rex_scale)
+        self.t_rex = Dino(speed=self.settings.dino_speed, scale_factor=self.settings.dino_scale)
         self.ground = Ground(speed=self.settings.ground_speed)
 
     def _check_events(self):

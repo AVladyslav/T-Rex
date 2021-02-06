@@ -6,6 +6,7 @@ class Dino:
     def __init__(self, jump_velocity, scale_factor=0):
         self.jump_velocity = jump_velocity
         self.current_velocity = 0
+        self.counter = 0
 
         self.images_running, self.rect = util.load_sprite_sheet(
             image_name=Settings.dino_sheet_name,
@@ -30,22 +31,16 @@ class Dino:
         screen.blit(self.image, self.rect)
 
     def update(self):
-        self.index += 1
-
         if not self.isDead:
-            # 2 last sprites of dead t-rex
-            if self.index is Settings.dino_n_of_sprites - 2:
-                self.index = 0
-            self.image = self.images_running[self.index]
-
             if self.isJumping:
 
                 # Calculating new position
                 y_pos = self.rect.bottom
-                y_pos = y_pos + self.delta_t * self.current_velocity * abs(Settings.ground_speed) * 4
+                y_pos = y_pos + self.delta_t * self.current_velocity * abs(Settings.ground_speed) * 4 * Settings.level
 
                 # Calculating new velocity
-                self.current_velocity = self.current_velocity + self.delta_t * abs(Settings.ground_speed)
+                self.current_velocity = \
+                    self.current_velocity + self.delta_t * abs(Settings.ground_speed) * Settings.level
 
                 # If dino landed - finishing jump
                 if y_pos > Settings.dino_position['y']:
@@ -54,8 +49,23 @@ class Dino:
 
                 # Setting new dino position
                 self.rect.bottom = y_pos
+            else:
+                self.counter += 1
+                if self.counter % 4 == 0:
+                    self.index += 1
+
+                # 2 last sprites of dead t-rex
+                if self.index is Settings.dino_n_of_sprites - 2:
+                    self.index = 2
+                self.image = self.images_running[self.index]
 
     def jump(self):
         if not self.isJumping:
             self.isJumping = True
             self.current_velocity = self.jump_velocity
+            # Jumping dino
+            self.image = self.images_running[0]
+
+    def duck(self):
+        # TODO: Finish it later
+        pass

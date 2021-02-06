@@ -3,15 +3,22 @@ class Settings:
     # Frames per seconds
     FPS = 30
 
+    # Level
+    level = 1.1
+
     # Sizes
     logo_position = (300, 30)   # x, y
     screen_size = [1500, 500]
 
     # Positions
     dino_position = {'x': 50, 'y': 480}
+    cactus_min_dist = int(screen_size[0] * 0.4)
+    cactus_max_dist = screen_size[0]
+    text_position = (1200, 50)
 
     # Colors
     bg_color = (243, 243, 243)
+    text_color = (53, 115, 58)
 
     # Speeds
     cloud_speed = -5

@@ -20,8 +20,8 @@ class Ground:
 
     def update(self):
         # Moving ground
-        self.rect1.left += self.speed
-        self.rect2.left += self.speed
+        self.rect1.left += self.speed * Settings.level
+        self.rect2.left += self.speed * Settings.level
 
         # Swapping grounds
         if self.is1InFront:

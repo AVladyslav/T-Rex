@@ -21,22 +21,25 @@ class TRexGame:
 
         self.logo_image = pg.image.load(os.path.join('images', 'logo.png'))
 
-        self.t_rex = Dino(speed=self.settings.dino_speed, scale_factor=self.settings.dino_scale)
+        self.dino = Dino(jump_velocity=self.settings.dino_jump_velocity, scale_factor=self.settings.dino_scale)
         self.ground = Ground(speed=self.settings.ground_speed)
 
     def _check_events(self):
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.running = False
+            elif event.type == pg.KEYDOWN:
+                if event.key == pg.K_SPACE:
+                    self.dino.jump()
 
     def _update(self):
         self.ground.update()
-        self.t_rex.update()
+        self.dino.update()
 
-    def _update_screen(self):
+    def _draw(self):
         self.screen.fill(self.settings.bg_color)
         self.ground.draw(self.screen)
-        self.t_rex.draw(self.screen)
+        self.dino.draw(self.screen)
         self.screen.blit(self.logo_image, self.settings.logo_position)
         # Updating display
         pg.display.update()
@@ -47,7 +50,7 @@ class TRexGame:
         while self.running:
             self._check_events()
             self._update()
-            self._update_screen()
+            self._draw()
             self.clock.tick(self.settings.FPS)
 
         # Done! Time to quit.

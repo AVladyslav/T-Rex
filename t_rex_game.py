@@ -35,7 +35,7 @@ class TRexGame:
                     self.dino.jump()
 
     def _update(self):
-        if Settings.level < 2.5:
+        if Settings.level < Settings.max_level:
             if pg.time.get_ticks() % 3000 == 0:
                 Settings.level += 0.1
 
@@ -44,6 +44,11 @@ class TRexGame:
         self.dino.update()
         self.check_collisions()
         self.text.update()
+
+    def check_collisions(self):
+        if self.dino.rect.colliderect(self.cactus.rects[0]):
+            self.isEndOfGame = True
+            self.running = False
 
     def _draw(self):
         self.screen.fill(self.settings.bg_color)
@@ -66,7 +71,6 @@ class TRexGame:
         # Done! Time to quit.
         pg.quit()
 
-    def check_collisions(self):
-        if self.dino.rect.colliderect(self.cactus.rects[0]):
-            self.isEndOfGame = True
-            self.running = False
+    def get_state(self):
+        # isJumping,
+        state = []

@@ -47,3 +47,9 @@ class Cactus:
     def draw(self, screen):
         for i in range(len(self.images)):
             screen.blit(self.images[i], self.rects[i])
+
+    def reset(self):
+        self.index = 0
+        self.rects[0].left = Settings.screen_size[0]
+        self.rects[1].left = Settings.screen_size[0] * 1.5
+        self.rects[2].left = Settings.screen_size[0] * 2

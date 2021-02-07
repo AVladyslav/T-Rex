@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 from utils import util
 from utils.settings import Settings
 
@@ -13,6 +15,8 @@ class Ground:
         self.rect1.bottom = Settings.screen_size[1] - 20
         self.rect2.bottom = Settings.screen_size[1] - 20
         self.rect2.left = self.rect1.right
+
+        self.initial_parameters = [deepcopy(speed), deepcopy(self.rect1), deepcopy(self.rect2)]
 
     def draw(self, screen):
         screen.blit(self.image1, self.rect1)
@@ -32,3 +36,9 @@ class Ground:
             if self.rect2.left < 0:
                 self.is1InFront = True
                 self.rect1.left = self.rect2.right
+
+    def reset(self):
+        self.speed = deepcopy(self.initial_parameters[0])
+        self.rect1 = deepcopy(self.initial_parameters[1])
+        self.rect2 = deepcopy(self.initial_parameters[2])
+        self.is1InFront = False

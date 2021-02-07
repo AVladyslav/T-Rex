@@ -14,6 +14,9 @@ class Text:
         self.score += int(Settings.level * 10 - 10)
 
     def draw(self, screen):
-        text = 'Level: ' + str(int(Settings.level % 1 * 10)) + ' Score: ' + str(self.score)
+        text = 'Level: ' + str(int(Settings.level * 10 - 10)) + ' Score: ' + str(self.score)
         textsurface = self.myfont.render(text, False, Settings.text_color)
         screen.blit(textsurface, Settings.text_position)
+
+    def reset(self):
+        self.score = 0

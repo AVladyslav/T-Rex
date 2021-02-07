@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 from utils import util
 from utils.settings import Settings
 
@@ -17,8 +19,8 @@ class Dino:
             number_x=Settings.dino_ducking_n_of_sprites,
             scale_factor=scale_factor)
 
-        self.rect.bottom = Settings.dino_position['y']
-        self.rect.left = Settings.dino_position['x']
+        self.rect.bottom = deepcopy(Settings.dino_position['y'])
+        self.rect.left = deepcopy(Settings.dino_position['x'])
 
         self.image = self.images_running[0]
         self.isJumping = False
@@ -58,6 +60,9 @@ class Dino:
                 if self.index is Settings.dino_n_of_sprites - 2:
                     self.index = 2
                 self.image = self.images_running[self.index]
+        else:
+            # Image of dead dino
+            self.image = self.images_running[4]
 
     def jump(self):
         if not self.isJumping:
@@ -69,3 +74,15 @@ class Dino:
     def duck(self):
         # TODO: Finish it later
         pass
+
+    def reset(self):
+        self.current_velocity = 0
+        self.counter = 0
+
+        self.rect.bottom = deepcopy(Settings.dino_position['y'])
+
+        self.image = self.images_running[0]
+        self.isJumping = False
+        self.isDead = False
+        self.isDucking = False
+        self.index = 0

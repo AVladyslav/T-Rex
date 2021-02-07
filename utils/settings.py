@@ -4,7 +4,9 @@ class Settings:
     FPS = 30
 
     # Level
-    level = 1.1
+    level = 4
+    max_level = 4
+    min_level = 4
 
     # Sizes
     logo_position = (300, 30)   # x, y

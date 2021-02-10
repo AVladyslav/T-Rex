@@ -49,7 +49,7 @@ if __name__ == '__main__':
 
     done = False
     batch_size = 64
-    EPISODES = 1000
+    EPISODES = 100
     counter = 0
     total_reward = 0
 
@@ -60,7 +60,8 @@ if __name__ == '__main__':
         #     env.turn_on_display()
 
         summary = []
-        for _ in range(100):
+
+        for _ in range(200):
             total_reward = 0
             env_state = env.reset()
 
@@ -69,7 +70,7 @@ if __name__ == '__main__':
             #
             state = np.array([env_state])
 
-            for time in range(100):
+            for time in range(200):
                 action = agent.get_action(state)
                 next_state_env, reward, done = env.step(action)
                 total_reward += reward
@@ -83,20 +84,23 @@ if __name__ == '__main__':
                 agent.remember(state, action, reward, next_state, done)
                 state = next_state
                 if done:
-                    print(env.text.score)
-                    print(total_reward)
+                    print('score:', env.text.score)
+                    print('total reward:', total_reward)
                     break
 
             #
             # INSERT CODE HERE to train network if in the memory is more samples then size of the batch
             #
-            if len(agent.memory) > batch_size:
+            if len(agent.memory) > 64:
                 agent.replay(64)
 
             summary.append(total_reward)
 
         agent.update_epsilon_value()
 
+        if e % 10 == 0:
+            agent.model.save('./nn_models/' + str(e) + '_episode_model.h5')
+        
         if np.mean(total_reward) > 195:
             print("You Win!")
             agent.save()

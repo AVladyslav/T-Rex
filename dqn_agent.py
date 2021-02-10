@@ -69,7 +69,7 @@ class DQNAgent:
         targets = []
 
         for state, action, reward, next_state, done in batch:
-            states.append(state.flatten())
+            states.append(state[0])
             target = self.model.predict(state)
             if done:
                 target[0][action] = reward

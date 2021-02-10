@@ -8,7 +8,7 @@ class Settings:
     tresh_value = 200
 
     # Rewards
-    negative_reward = -100
+    negative_reward = -10
     positive_reward = 1
 
     # Number of images in series
@@ -18,9 +18,9 @@ class Settings:
     FPS = 30
 
     # Level
-    level = 2
-    max_level = 2
-    min_level = 2
+    level = 1.5
+    max_level = 1.5
+    min_level = 1.5
 
     # Sizes
     logo_position = (300, 30)   # x, y

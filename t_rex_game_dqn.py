@@ -145,13 +145,8 @@ class TRexGame:
             image_series.append(image)
 
         next_state_env = np.array(image_series)
-        print(next_state_env.shape)
-
-        # next_state_env = next_state_env.flatten()
 
         next_state_env = next_state_env.reshape(Settings.thumb_height, Settings.thumb_width, Settings.n_in_series)
-        print(next_state_env.shape)
-
 
         if self.done:
             reward = Settings.negative_reward

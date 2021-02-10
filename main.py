@@ -22,10 +22,10 @@ if __name__ == '__main__':
     model.add(Conv2D(32, kernel_size=3, activation='relu', input_shape=(
         Settings.thumb_height, Settings.thumb_width, Settings.n_in_series)))
     model.add(MaxPooling2D(pool_size=(5, 5), strides=(2, 2)))
-    model.add(Conv2D(64, (4, 4), activation='relu', strides=(1, 1)))
-    model.add(MaxPooling2D(pool_size=(7, 7), strides=(3, 3)))
+    model.add(Conv2D(64, (3, 3), activation='relu', strides=(1, 1)))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(3, 3)))
     model.add(Conv2D(128, (1, 1), strides=(1, 1), activation='relu'))
-    model.add(MaxPooling2D(pool_size=(3, 3), strides=(3, 3)))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(3, 3)))
     model.add(Flatten())
     model.add(Dense(384, activation='relu'))
     model.add(Dense(64, activation="relu", name="layer1"))
@@ -61,7 +61,7 @@ if __name__ == '__main__':
 
         summary = []
 
-        for _ in range(200):
+        for _ in range(20):
             total_reward = 0
             env_state = env.reset()
 

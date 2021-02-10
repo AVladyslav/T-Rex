@@ -1,12 +1,15 @@
 import copy
 import random
 
+import pygame
+
 from utils import util
 from utils.settings import Settings
 
 
 class Cactus:
     def __init__(self, speed, scale_factor=0):
+        self.cactus_omitted = False
         self.speed = speed
         self.index = 0
 
@@ -14,7 +17,7 @@ class Cactus:
             image_name=Settings.cactus_large_sheet_name,
             number_x=Settings.cactus_large_n_of_sprites,
             scale_factor=scale_factor)
-        self.images_small, self.rects_small = util.load_sprite_sheet(
+        self.images_small, self.rect_small = util.load_sprite_sheet(
             image_name=Settings.cactus_small_sheet_name,
             number_x=Settings.cactus_small_n_of_sprites,
             scale_factor=scale_factor)
@@ -43,6 +46,8 @@ class Cactus:
 
             # Swapping first to last cactus image
             self.images.append(self.images.pop(0))
+            
+            self.cactus_omitted = True
 
     def draw(self, screen):
         for i in range(len(self.images)):

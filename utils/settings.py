@@ -1,12 +1,26 @@
 class Settings:
 
+    # Screenshots
+    rect_width = 500
+    rect_height = 500
+    thumb_width = 100
+    thumb_height = 100
+    tresh_value = 200
+
+    # Rewards
+    negative_reward = -100
+    positive_reward = 1
+
+    # Number of images in series
+    n_in_series = 4
+
     # Frames per seconds
     FPS = 30
 
     # Level
-    level = 4
-    max_level = 4
-    min_level = 4
+    level = 2
+    max_level = 2
+    min_level = 2
 
     # Sizes
     logo_position = (300, 30)   # x, y
@@ -26,7 +40,7 @@ class Settings:
     cloud_speed = -5
     ground_speed = -15
     dino_jump_velocity = -10
-    gravity = 0.9
+    gravity = 1.6
 
     # Scale factors
     cactus_scale = 0

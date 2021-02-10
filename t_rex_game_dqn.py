@@ -1,4 +1,7 @@
 import pygame as pg
+from PIL import Image, ImageOps
+import numpy as np
+import copy
 
 from model.cactus import Cactus
 from model.ground import Ground
@@ -12,8 +15,8 @@ class TRexGame:
     def __init__(self):
 
         # Reinforcement Learning stuff
-        # IsJumping, position of first cactus, position of second cactus
-        self.state_size = 2
+        # Position of first cactus, position of second cactus
+        self.state_size = 1
         # Do nothing, jump
         self.action_size = 2
         self.DO_NOTHING = 0
@@ -23,9 +26,6 @@ class TRexGame:
 
         self.display_mode_on = True
 
-        self.running = True
-        self.isEndOfGame = False
-
         # Game itself
         pg.init()
 
@@ -34,8 +34,6 @@ class TRexGame:
         pg.display.set_caption('Run T-Rex Run')
 
         self.clock = pg.time.Clock()
-        self.running = True
-        self.isEndOfGame = False
 
         self.dino = Dino(jump_velocity=Settings.dino_jump_velocity, scale_factor=Settings.dino_scale)
         self.ground = Ground(speed=Settings.ground_speed)
@@ -63,8 +61,6 @@ class TRexGame:
 
     def check_collisions(self):
         if self.dino.rect.colliderect(self.cactus.rects[0]):
-            self.isEndOfGame = True
-            self.running = False
             self.dino.isDead = True
             self.done = True
 
@@ -80,33 +76,35 @@ class TRexGame:
             # Updating display
             pg.display.update()
 
-    def run_game(self):
+    # def run_game(self):
+    #
+    #     # Run until the user asks to quit
+    #     while self.running:
+    #         self._check_events()
+    #         self._update()
+    #         self._draw()
+    #         self.clock.tick(Settings.FPS)
+    #
+    #     # Done! Time to quit.
+    #     pg.quit()
 
-        # Run until the user asks to quit
-        while self.running:
-            self._check_events()
-            self._update()
-            self._draw()
-            self.clock.tick(Settings.FPS)
-
-        # Done! Time to quit.
-        pg.quit()
 
     def _get_state(self):
+
+        image = self._make_screenshot()
+
         # IsJumping, position of first cactus
         dist_to_cactus = Settings.screen_size[0] - self.cactus.rects[0].left
         if dist_to_cactus < 0:
             dist_to_cactus = 1
         else:
             dist_to_cactus /= Settings.screen_size[0]
-        state = [self.dino.isJumping, dist_to_cactus]
+        state = [dist_to_cactus]
         return state
 
     def reset(self):
 
         self.done = False
-        self.running = True
-        self.isEndOfGame = False
 
         Settings.level = Settings.min_level
 
@@ -115,23 +113,50 @@ class TRexGame:
         self.ground.reset()
         self.text.reset()
 
-        return self._get_state()
-
-    def step(self, action):
-
-        if action == self.JUMP:
-            self.dino.jump()
-
         self._update()
         self._draw()
         self.clock.tick(Settings.FPS)
 
-        next_state_env = self._get_state()
+        image_series = []
+        self._update()
+        self._draw()
+        self.clock.tick(Settings.FPS)
+        image = self._make_screenshot()
+        for _ in range(Settings.n_in_series):
+            image_series.append(copy.deepcopy(image))
+
+        state_env = np.array(image_series)
+        state_env = state_env.reshape(Settings.thumb_height, Settings.thumb_width, Settings.n_in_series)
+
+        return state_env
+
+    def step(self, action):
+
+        image_series = []
+
+        if action == self.JUMP:
+            self.dino.jump()
+
+        for _ in range(Settings.n_in_series):
+            self._update()
+            self._draw()
+            self.clock.tick(Settings.FPS)
+            image = self._make_screenshot()
+            image_series.append(image)
+
+        next_state_env = np.array(image_series)
+        print(next_state_env.shape)
+
+        # next_state_env = next_state_env.flatten()
+
+        next_state_env = next_state_env.reshape(Settings.thumb_height, Settings.thumb_width, Settings.n_in_series)
+        print(next_state_env.shape)
+
 
         if self.done:
-            reward = -500
+            reward = Settings.negative_reward
         else:
-            reward = 1
+            reward = Settings.positive_reward
 
         return next_state_env, reward, self.done
 
@@ -140,3 +165,21 @@ class TRexGame:
 
     def turn_on_display(self):
         self.display_mode_on = True
+
+    def _make_screenshot(self):
+        # Snipping rect of screen
+        rect = pg.Rect(0, 0, Settings.rect_width, Settings.rect_height)
+        surface = self.screen.subsurface(rect)
+        strFormat = 'RGBA'
+        raw_str = pg.image.tostring(surface, strFormat, False)
+        image = Image.frombytes(strFormat, surface.get_size(), raw_str)
+        image.thumbnail((Settings.thumb_width, Settings.thumb_height), Image.ANTIALIAS)
+        image = ImageOps.grayscale(image)
+
+        # Inverted treshold
+        thresh = Settings.tresh_value
+        fn = lambda x: 0 if x > thresh else 255
+        image = image.convert('L').point(fn, mode='1')
+        image = np.asarray(image)
+        image = image.astype(int) * 255
+        return image

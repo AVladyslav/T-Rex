@@ -1,5 +1,7 @@
 from copy import deepcopy
 
+import pygame
+
 from utils import util
 from utils.settings import Settings
 
@@ -38,11 +40,11 @@ class Dino:
 
                 # Calculating new position
                 y_pos = self.rect.bottom
-                y_pos = y_pos + self.delta_t * self.current_velocity * abs(Settings.ground_speed) * 4 * Settings.level
+                y_pos = y_pos + self.delta_t * self.current_velocity * abs(Settings.ground_speed) * 7 * Settings.level
 
                 # Calculating new velocity
                 self.current_velocity = \
-                    self.current_velocity + self.delta_t * abs(Settings.ground_speed) * Settings.level
+                    self.current_velocity + self.delta_t * abs(Settings.ground_speed) * Settings.level * 1.2
 
                 # If dino landed - finishing jump
                 if y_pos > Settings.dino_position['y']:

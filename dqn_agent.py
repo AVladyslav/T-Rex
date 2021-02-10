@@ -2,14 +2,11 @@ import numpy as np
 import random
 
 from collections import deque
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.optimizers import Adam
 from tensorflow import keras
 
 
-class DDQNAgent:
-    def __init__(self, state_size, action_size):
+class DQNAgent:
+    def __init__(self, state_size, action_size, model):
         self.state_size = state_size
         self.action_size = action_size
         self.memory = deque(maxlen=2000)
@@ -18,21 +15,8 @@ class DDQNAgent:
         self.epsilon_min = 0.01
         self.epsilon_decay = 0.8
         self.learning_rate = 0.001
-        self.model = self._build_model()
-        self.target_model = self._build_model()
-        self.update_weights()
+        self.model = model
         self.replay_counter = 0
-
-    def _build_model(self):
-
-        model = Sequential()
-        model.add(Dense(8, input_dim=self.state_size, activation='relu'))
-        model.add(Dense(16, activation='relu'))
-        model.add(Dense(32, activation='relu'))
-        model.add(Dense(self.action_size, activation='linear'))
-        model.compile(loss='mse',
-                      optimizer=Adam(lr=self.learning_rate))
-        return model
 
     def remember(self, state, action, reward, next_state, done):
         # Function adds information to the memory about last action and its results
@@ -61,7 +45,7 @@ class DDQNAgent:
         Compute the best action to take in a state.
         """
 
-        return np.argmax(self.target_model.predict(state))
+        return np.argmax(self.model.predict(state))
 
     def replay(self, batch_size):
         """
@@ -90,24 +74,11 @@ class DDQNAgent:
             if done:
                 target[0][action] = reward
             else:
-                q_future = max(self.target_model.predict(next_state)[0])
-                target[0][action] = reward + q_future * self.gamma
+                Q_future = max(self.model.predict(next_state)[0])
+                target[0][action] = reward + Q_future * self.gamma
             targets.append(target.flatten())
 
         self.model.train_on_batch(np.array(states), np.array(targets))
-
-        self.replay_counter += 1
-
-        if self.replay_counter == 10:
-            self.replay_counter = 0
-            self.update_weights()
-
-    def update_weights(self):
-        """copy trained Q Network params to target Q Network"""
-        #
-        # INSERT CODE HERE to train network
-        #
-        self.target_model.set_weights(self.model.get_weights())
 
     def update_epsilon_value(self):
         # Every each epoch epsilon value should be updated according to equation:
@@ -117,8 +88,6 @@ class DDQNAgent:
 
     def save(self):
         self.model.save("my_model")
-        self.target_model.save("my_target_model")
 
     def load(self):
         self.model = keras.models.load_model('my_model')
-        self.target_model = keras.models.load_model('my_target_model')
